@@ -47,8 +47,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/mypage/price_setting', [MypageController::class, 'price_setting'])->name('price_setting');
     Route::get('/mypage/benefit_setting', [MypageController::class, 'benefit_setting'])->name('benefit_setting');
     Route::get('/mypage/exclusion_setting', [MypageController::class, 'exclusion_setting'])->name('exclusion_setting');
+    Route::get('/mypage/account_setting', [MypageController::class, 'account_setting'])->name('account_setting');
+    Route::post('/mypage/shop_register', [Mypagecontroller::class, 'shop_register'])->name('shop_register');
     //save
     Route::post('/mypage/common_save', [MypageController::class, 'commonSave'])->name('common_save');
+    Route::post('/mypage/item/edit/common_save', [MypageController::class, 'commonSave'])->name('common_save');
     Route::post('/mypage/price_save', [MypageController::class, 'priceSave'])->name('price_save');
     Route::post('/mypage/item_save', [MypageController::class, 'itemSave'])->name('item_save');
     Route::post('/mypage/price/pattern/save', [MypageController::class, 'savePattern'])->name('save_pattern');
@@ -57,6 +60,10 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/mypage/item_add', [MypageController::class, 'itemAdd'])->name('item_add');
     Route::get('/mypage/item_list', [MypageController::class, 'itemConfirm'])->name('item_list');
+    Route::get('/mypage/shop_list', [MypageController::class, 'shopList'])->name('shop_list');
+
+    Route::get('/mypage/send_msg', [MypageController::class, 'sendMsg'])->name('send_msg');
+    // Route::post('/mypage/shop_list', [MypageController::class, 'shopList'])->name('shop_list');
     Route::post('/mypage/csv_data_load', [MypageController::class, 'csvDataLoad'])->name('csv_data_load');
     //UserInfo
     Route::post('/mypage/external_save/{path}', [MypageController::class, 'external_save'])->name('external_save');
@@ -77,4 +84,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/mypage/pattern_setting', [MypageController::class, 'getPattern']);
     Route::post('/mypage/price_pattern/custom_save', [MypageController::class, 'custom_price_save']);
     Route::post('/mypage/time_pattern/custom_save', [MypageController::class, 'custom_time_save']);
+});
+
+Route::middleware(['cors'])->group(function () {
+    Route::get('http://localhost:32768/');
 });

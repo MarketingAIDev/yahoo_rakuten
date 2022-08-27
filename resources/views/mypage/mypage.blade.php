@@ -17,6 +17,10 @@
       vertical-align: -25%;
     }
 
+    .form-control,button {
+      border-radius: 0px !important;
+    }
+
     .btn-success {
       color: white !important;
       background-color: #17a2b8 !important;
@@ -154,7 +158,7 @@
       <!-- Brand Logo -->
       <a href="#" class="brand-link">
         <img src="{{ asset('assets/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="text-brand font-weight-light">らくらくECくん</span>
+        <span class="brand-text font-weight-light">らくらくECくん</span>
       </a>
 
       <!-- Sidebar -->
@@ -165,7 +169,7 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library --> 
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon far fa-plus-square"></i>
                 <p>
@@ -193,7 +197,7 @@
                   </a>
                 </li>              
               </ul>
-            </li> -->
+            </li>
             <!-- <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-book"></i>
@@ -256,11 +260,6 @@
                 <li class="nav-item">
                   <a href="{{ asset('/mypage/external_setting') }}" class="nav-link">
                     <p>外部連携設定</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{{ asset('/mypage/pattern_setting') }}" class="nav-link">
-                    <p>価格改定のパターン設定</p>
                   </a>
                 </li>
               </ul>

@@ -85,6 +85,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <th >上限価格</th>
                           <th >現在価格</th>
                           <th >自社送料</th>
+                          <th >セット数</th>
                         </tr>                        
                       </thead>
                       <tbody>
@@ -96,6 +97,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <td><input type="number" class="form-control" id="common_high_price" name="common_high_price" placeholder="0" style="width:100%" value="{{$item['common_high_price']}}"></td>
                           <td><input type="number" class="form-control" id="common_now_price" name="common_now_price" placeholder="0" style="width:100%" value="{{$item['common_now_price']}}"></td>
                           <td><input type="number" class="form-control" id="common_deli_price" name="common_deli_price" placeholder="0" style="width:100%" value="{{$item['common_deli_price']}}"></td>
+                          <td><input type="number" class="form-control" id="common_set_num" name="common_set_num" placeholder="0" style="width:100%" value="{{$item['c_set_num']}}"></td>
                         </tr>
                         <tr>
                           <td>楽天</td>
@@ -105,6 +107,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <td><input type="number" class="form-control" id="rakuten_high_price" name="rakuten_high_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="rakuten_now_price" name="rakuten_now_price" placeholder="0" style="width:100%" value="{{$item['rakuten_high_price']}}"></td>
                           <td><input type="number" class="form-control" id="rakuten_deli_price" name="rakuten_deli_price" placeholder="0" style="width:100%" value="{{$item['rakuten_deli_price']}}"></td>
+                          <td><input type="number" class="form-control" id="rakuten_set_num" name="rakuten_set_num" placeholder="0" style="width:100%" value="{{$item['r_set_num']}}"></td>
                         </tr>
                         <tr>
                           <td>ヤフー</td>
@@ -114,6 +117,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <td><input type="number" class="form-control" id="yahoo_high_price" name="yahoo_high_price" placeholder="0" style="width:100%" value="{{$item['yahoo_high_price']}}"></td>
                           <td><input type="number" class="form-control" id="yahoo_now_price" name="yahoo_now_price" placeholder="0" style="width:100%" value="{{$item['yahoo_now_price']}}"></td>
                           <td><input type="number" class="form-control" id="yahoo_deli_price" name="yahoo_deli_price" placeholder="0" style="width:100%" value="{{$item['yahoo_deli_price']}}"></td>
+                          <td><input type="number" class="form-control" id="yahoo_set_num" name="yahoo_set_num" placeholder="0" style="width:100%" value="{{$item['y_set_num']}}"></td>
                         </tr>
                       </tbody>						
                     </table>
@@ -130,191 +134,190 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
             </div>  
 
 			      <div class="tab-pane fade" id="custom-tabs-price" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-              <form class="form-horizontal">
-
-                <div class="card-body" style="padding:0px">
-                  <div class="form-group row">
-                    <input type="checkbox" data-toggle="switchbutton" id="ec_kind" data-onlabel="Rakuten" data-offlabel="Yahoo" data-onstyle="success" data-offstyle="danger" width="250px" checked>
-                  </div>
-                  <div class="form-group row">
-                    価格調査方法
-                  </div>
-                  <div class="form-group row">                                  
-                    <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
-                      
-                      <div class="col-sm-12 form-group clearfix">
-                        <div class="col-sm-12 icheck-primary d-inline">
-                          <input type="radio" id="search_kind_rakuten" value="1" name="search_kind" checked>
-                          <label for="search_kind_rakuten">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                              JANを利用
-                            </font></font>
-                            <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                          </label>
-                        </div>
-                        <div class="col-sm-12 icheck-danger d-inline">
-                          <input type="radio" id="search_kind_yahoo" value="0" name="search_kind">
-                          <label for="search_kind_yahoo">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                              キーワードを利用
-                            </font></font>
-                            <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                          </label>
-                        </div>                                     
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    価格調査対象 <br><font color="#FF0000">※「商品価格」で価格調査が行われます。</font>
-                  </div>
-                  <div class="row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">ポイント 
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
-                    <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
-                      <div class="col-sm-12 clearfix">
-                        <div class="col-sm-12 icheck-primary d-inline">
-                          <input type="radio" id="point_true" name="point" value="1" @if ($item['r_point_true'])) checked @endif>
-                          <label for="point_true">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                            含まない
-                            </font></font>                                          
-                          </label>
-                        </div>
-                        <div class="col-sm-12 icheck-danger d-inline">
-                          <input type="radio" id="point_false" name="point"  value="0" @if (!$item['r_point_true'])) checked @endif>
-                          <label for="point_false">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                            含む
-                            </font></font>
-                          </label>
-                        </div>                                     
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">送料  
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
-                    <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
-                      <div class="col-sm-12 form-group clearfix">
-                        <div class="col-sm-12 icheck-primary d-inline">
-                          <input type="radio" id="deli_true" name="deli" value="1" @if ($item['r_deli_true'])) checked @endif>
-                          <label for="deli_true">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                            含まない
-                            </font></font>                                          
-                          </label>
-                        </div>
-                        <div class="col-sm-12 icheck-danger d-inline">
-                          <input type="radio" id="deli_false" name="deli" value="0" @if (!$item['r_deli_true'])) checked @endif>
-                          <label for="deli_false">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                            含む
-                            </font></font>
-                          </label>
-                        </div>                                     
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">送料無料  
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
-                    <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
-                      <div class="col-sm-12 form-group clearfix">
-                        <div class="col-sm-12 icheck-primary d-inline">
-                          <input type="radio" id="free_deli_true" name="free_deli" value="1"  @if ($item['r_free_deli_true'])) checked @endif>
-                          <label for="free_deli_true">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                            含まない
-                            </font></font>                                          
-                          </label>
-                        </div>
-                        <div class="col-sm-12 icheck-danger d-inline">
-                          <input type="radio" id="free_deli_false" value="0" name="free_deli"@if (!$item['r_free_deli_true'])) checked @endif>
-                          <label for="free_deli_false">
-                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                            含む
-                            </font></font>
-                          </label>
-                        </div>                                     
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">追尾ショップ
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
+            <form class="form-horizontal">
+              <div class="card-body" style="padding:0px">
+                <div class="form-group row">
+                  <input type="checkbox" data-toggle="switchbutton" id="ec_kind" data-onlabel="Rakuten" data-offlabel="Yahoo" data-onstyle="success" data-offstyle="danger" width="250px" checked>
+                </div>
+                <div class="form-group row">
+                  価格調査方法
+                </div>
+                <div class="form-group row">                                  
+                  <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
                     
-                    <div class="col-sm-10">
-                      <div>
-                        <input type="text" class="form-control" id="tracking_shop" name="tracking_shop" placeholder="メモ" value="{{$item['r_tracking_shop']}}">
+                    <div class="col-sm-12 form-group clearfix">
+                      <div class="col-sm-12 icheck-primary d-inline">
+                        <input type="radio" id="search_kind_rakuten" value="1" name="search_kind" checked>
+                        <label for="search_kind_rakuten">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                            JANを利用
+                          </font></font>
+                          <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                        </label>
                       </div>
-                      <div style="color:#FF0000" id="tracking_shop_div">
-                        ※カンマ区切りで複数登録可<br>
-                        ※「https://www.rakuten.co.jp/●●●/」の●●●の部分を入れてください。
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    調査除外設定
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">調査下限価格
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
-                    
-                    <div class="col-sm-10">
-                      <div>
-                        <input type="number" class="form-control" id="low_price" name="low_price" placeholder="調査下限価格" value="{{$item['r_low_price']}}">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">調査除外キーワード
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>                                  
-                    <div class="col-sm-10">
-                      <div>
-                        <input type="text" class="form-control" id="out_keyword" name="out_keyword" placeholder="調査除外キーワード" value="{{$item['r_out_keyword']}}">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row" style="display:none" id="out_store_ranking_div">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">調査除外ストア評価
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
-                    <div class="col-sm-10">
-                      <select class="form-control" id="out_store_ranking" name="out_store_ranking">
-                        <option></option>
-                        <option @if($item['y_out_store_ranking'] == 1) selected @endif>1</option>
-                        <option @if($item['y_out_store_ranking'] == 2) selected @endif>2</option>
-                        <option @if($item['y_out_store_ranking'] == 3) selected @endif>3</option>
-                        <option @if($item['y_out_store_ranking'] == 4) selected @endif>4</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">調査除外ショップURL
-                    <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
-                    </label>
-                    
-                    <div class="col-sm-10">
-                      <div>
-                        <input type="text" class="form-control" id="survey_url" name="survey_url" placeholder="調査除外ショップURL" value="{{$item['r_survey_url']}}">
-                      </div>
-                      <div style="color:#FF0000" id="survey_url_div">
-                        ※カンマ区切りで複数登録可<br>
-                        ※「https://www.rakuten.co.jp/●●●/」の●●●の部分を入れてください。
-                      </div>
+                      <div class="col-sm-12 icheck-danger d-inline">
+                        <input type="radio" id="search_kind_yahoo" value="0" name="search_kind">
+                        <label for="search_kind_yahoo">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                            キーワードを利用
+                          </font></font>
+                          <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                        </label>
+                      </div>                                     
                     </div>
                   </div>
                 </div>
-                <div class="card-footer">
-                  <button type="button" class="btn btn-info float-right" onclick="price_save()">価格調査用設定する</button>
-                </div>			
+                <div class="form-group">
+                  価格調査対象 <br><font color="#FF0000">※「商品価格」で価格調査が行われます。</font>
+                </div>
+                <div class="row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">ポイント 
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
+                    <div class="col-sm-12 clearfix">
+                      <div class="col-sm-12 icheck-primary d-inline">
+                        <input type="radio" id="point_true" name="point" value="1" @if ($item['r_point_true'])) checked @endif>
+                        <label for="point_true">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                          含まない
+                          </font></font>                                          
+                        </label>
+                      </div>
+                      <div class="col-sm-12 icheck-danger d-inline">
+                        <input type="radio" id="point_false" name="point"  value="0" @if (!$item['r_point_true'])) checked @endif>
+                        <label for="point_false">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                          含む
+                          </font></font>
+                        </label>
+                      </div>                                     
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">送料  
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
+                    <div class="col-sm-12 form-group clearfix">
+                      <div class="col-sm-12 icheck-primary d-inline">
+                        <input type="radio" id="deli_true" name="deli" value="1" @if ($item['r_deli_true'])) checked @endif>
+                        <label for="deli_true">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                          含まない
+                          </font></font>                                          
+                        </label>
+                      </div>
+                      <div class="col-sm-12 icheck-danger d-inline">
+                        <input type="radio" id="deli_false" name="deli" value="0" @if (!$item['r_deli_true'])) checked @endif>
+                        <label for="deli_false">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                          含む
+                          </font></font>
+                        </label>
+                      </div>                                     
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">送料無料  
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  <div class="col-sm-10" style="padding-top: calc(0.375rem + 1px);">
+                    <div class="col-sm-12 form-group clearfix">
+                      <div class="col-sm-12 icheck-primary d-inline">
+                        <input type="radio" id="free_deli_true" name="free_deli" value="1"  @if ($item['r_free_deli_true'])) checked @endif>
+                        <label for="free_deli_true">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                          含まない
+                          </font></font>                                          
+                        </label>
+                      </div>
+                      <div class="col-sm-12 icheck-danger d-inline">
+                        <input type="radio" id="free_deli_false" value="0" name="free_deli"@if (!$item['r_free_deli_true'])) checked @endif>
+                        <label for="free_deli_false">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                          含む
+                          </font></font>
+                        </label>
+                      </div>                                     
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">追尾ショップ
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  
+                  <div class="col-sm-10">
+                    <div>
+                      <input type="text" class="form-control" id="tracking_shop" name="tracking_shop" placeholder="メモ" value="{{$item['r_tracking_shop']}}">
+                    </div>
+                    <div style="color:#FF0000" id="tracking_shop_div">
+                      ※カンマ区切りで複数登録可<br>
+                      ※「https://www.rakuten.co.jp/●●●/」の●●●の部分を入れてください。
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  調査除外設定
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">調査下限価格
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  
+                  <div class="col-sm-10">
+                    <div>
+                      <input type="number" class="form-control" id="low_price" name="low_price" placeholder="調査下限価格" value="{{$item['r_low_price']}}">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">調査除外キーワード
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>                                  
+                  <div class="col-sm-10">
+                    <div>
+                      <input type="text" class="form-control" id="out_keyword" name="out_keyword" placeholder="調査除外キーワード" value="{{$item['r_out_keyword']}}">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row" style="display:none" id="out_store_ranking_div">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">調査除外ストア評価
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  <div class="col-sm-10">
+                    <select class="form-control" id="out_store_ranking" name="out_store_ranking">
+                      <option></option>
+                      <option @if($item['y_out_store_ranking'] == 1) selected @endif>1</option>
+                      <option @if($item['y_out_store_ranking'] == 2) selected @endif>2</option>
+                      <option @if($item['y_out_store_ranking'] == 3) selected @endif>3</option>
+                      <option @if($item['y_out_store_ranking'] == 4) selected @endif>4</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">調査除外ショップURL
+                  <i _ngcontent-bso-c80="" placement="right" class="far fa-question-circle tooltip-wide"></i>
+                  </label>
+                  
+                  <div class="col-sm-10">
+                    <div>
+                      <input type="text" class="form-control" id="survey_url" name="survey_url" placeholder="調査除外ショップURL" value="{{$item['r_survey_url']}}">
+                    </div>
+                    <div style="color:#FF0000" id="survey_url_div">
+                      ※カンマ区切りで複数登録可<br>
+                      ※「https://www.rakuten.co.jp/●●●/」の●●●の部分を入れてください。
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="button" class="btn btn-info float-right" onclick="price_save()">価格調査用設定する</button>
+              </div>			
               </form>
             </div>
 
@@ -398,7 +401,6 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                   </div>
                 </div>
               </form>
-
             </div>            
           </div>
         </div>
@@ -464,14 +466,24 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
     };
 
     function yahoo_low_price_func(){     
-      $("#yahoo_low_price").val($("#yahoo_normal_price").val() * (1 + $("#yahoo_pro_price").val() / 100));
+      $("#yahoo_low_price").val(Math.round($("#yahoo_normal_price").val() * (1 + $("#yahoo_pro_price").val() / 100)));
     }
     function rakuten_low_price_func(){
-      $("#rakuten_low_price").val($("#rakuten_normal_price").val() * (1 + $("#rakuten_pro_price").val() / 100));
+      $("#rakuten_low_price").val(Math.round($("#rakuten_normal_price").val() * (1 + $("#rakuten_pro_price").val() / 100)));
     }
+    
     function common_low_price_func(){
-      $("#common_low_price").val($("#common_normal_price").val() * (1 + $("#common_pro_price").val() / 100));
+      console.log("common_low_price_func")
+      $("#common_low_price").val(Math.round($("#common_normal_price").val() * (1 + $("#common_pro_price").val() / 100)));
+      
+      $("#rakuten_normal_price").val($("#common_normal_price").val());
+      $("#rakuten_low_price").val(Math.round($("#rakuten_normal_price").val() * (1 + $("#rakuten_pro_price").val() / 100)));
+
+      $("#yahoo_normal_price").val($("#common_normal_price").val());
+      $("#yahoo_low_price").val(Math.round($("#yahoo_normal_price").val() * (1 + $("#yahoo_pro_price").val() / 100)));
     }
+
+
     function item_save(){
       var ec_kind = "rakuten";
       if($("#ec_kind_1").prop('checked') == false){ 
@@ -534,7 +546,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
             low_price : $("#low_price").val(),
             out_keyword : $("#out_keyword").val(),
             out_store_ranking : $("#out_store_ranking").val(),
-            survey_url : $("#survey_url").val(),            
+            survey_url : $("#survey_url").val(),
 
           },
           success: function (response) {   
@@ -550,7 +562,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 
     }
 
-    function common_save(){
+    function common_save(id){
       
       let addr =  "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?format=json&keyword=" + $("#item_name").val() + "&genreId=555086&applicationId=1006686799015924310";
       $.ajax({
@@ -584,7 +596,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
           },
           type: "post",
           data: {
-            sel : sel,
+            sel : id,
             master_code : $("#master_code").val(),
             item_name : $("#item_name").val(),
             jan_code : $("#jan_code").val(),
@@ -596,19 +608,21 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
             common_normal_price : $("#common_normal_price").val(),
             common_high_price : $("#common_high_price").val(),
             common_deli_price : $("#common_deli_price").val(),
+            c_set_num : $("#common_set_num").val(),
 
             rakuten_low_price : $("#rakuten_low_price").val(),
             rakuten_pro_price : $("#rakuten_pro_price").val(),
             rakuten_normal_price : $("#rakuten_normal_price").val(),
             rakuten_high_price : $("#rakuten_high_price").val(),
             rakuten_deli_price : $("#rakuten_deli_price").val(),
+            r_set_num : $("#rakuten_set_num").val(),
 
             yahoo_low_price : $("#yahoo_low_price").val(),
             yahoo_pro_price : $("#yahoo_pro_price").val(),
             yahoo_normal_price : $("#yahoo_normal_price").val(),
             yahoo_high_price : $("#yahoo_high_price").val(),
             yahoo_deli_price : $("#yahoo_deli_price").val(),
-
+            y_set_num : $("#yahoo_set_num").val(),
           },
           success: function (response) {   
             alert("保存されました。");

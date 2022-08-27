@@ -28,4 +28,3 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
 
-<script src="{{ asset('assets/plugins/jquery.orderable.js') }}"></script>

@@ -19,18 +19,25 @@ class Item extends Model
         'group_set',
         'memo',
 
+        'r_set_num',
+        'y_set_num',
+        'c_set_num',
+
+        'common_now_price',
         'common_low_price',
         'common_pro_price',
         'common_normal_price',
         'common_high_price',
         'common_deli_price',
 
+        'rakuten_now_price',
         'rakuten_low_price',
         'rakuten_pro_price',
         'rakuten_normal_price',
         'rakuten_high_price',
         'rakuten_deli_price',
 
+        'yahoo_now_price',
         'yahoo_low_price',
         'yahoo_pro_price',
         'yahoo_normal_price',
@@ -73,4 +80,18 @@ class Item extends Model
         'r_real_low_price',
         'y_real_low_price'
     ];
+
+    public function r_time_pattern() {
+        return $this->belongsTo(
+            TimePattern::class,
+            'r_time_condition'
+        );
+    }
+
+    public function y_time_pattern() {
+        return $this->belongsTo(
+            TimePattern::class,
+            'y_time_condition'
+        );
+    }
 }

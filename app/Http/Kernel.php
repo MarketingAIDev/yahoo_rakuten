@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'producer' => \App\Http\Middleware\Producer::class,
         'worker' => \App\Http\Middleware\Worker::class,
         'producer_has_recruitment' => \App\Http\Middleware\ProducerHasRecruitment::class,
+        'cors' => \App\Http\Middleware\Cors::class,
     ];
 }

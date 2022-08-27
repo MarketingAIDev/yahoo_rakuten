@@ -78,13 +78,14 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                     <table class="table table-bordered">
                       <thead style="text-align: center">
                         <tr>                       
-                          <th >モール名</th>
+                          <th style="width: 90px;">モール名</th>
                           <th >下限価格</th>
                           <th >利益率(%)</th>
                           <th >原価</th>
                           <th >上限価格</th>
                           <th >現在価格</th>
                           <th >自社送料</th>
+                          <th >セット数</th>
                         </tr>                        
                       </thead>
                       <tbody>
@@ -96,6 +97,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <td><input type="number" class="form-control" id="common_high_price" name="common_high_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="common_now_price" name="common_now_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="common_deli_price" name="common_deli_price" placeholder="0" style="width:100%" value="0"></td>
+                          <td><input type="number" class="form-control" id="common_set_num" name="common_set_num" placeholder="0" style="width:100%" value="0"></td>
                         </tr>
                         <tr>
                           <td>楽天</td>
@@ -105,6 +107,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <td><input type="number" class="form-control" id="rakuten_high_price" name="rakuten_high_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="rakuten_now_price" name="rakuten_now_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="rakuten_deli_price" name="rakuten_deli_price" placeholder="0" style="width:100%" value="0"></td>
+                          <td><input type="number" class="form-control" id="rakuten_set_num" name="rakuten_set_num" placeholder="0" style="width:100%" value="0"></td>
                         </tr>
                         <tr>
                           <td>ヤフー</td>
@@ -114,6 +117,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
                           <td><input type="number" class="form-control" id="yahoo_high_price" name="yahoo_high_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="yahoo_now_price" name="yahoo_now_price" placeholder="0" style="width:100%" value="0"></td>
                           <td><input type="number" class="form-control" id="yahoo_deli_price" name="yahoo_deli_price" placeholder="0" style="width:100%" value="0"></td>
+                          <td><input type="number" class="form-control" id="yahoo_set_num" name="yahoo_set_num" placeholder="0" style="width:100%" value="0"></td>
                         </tr>
                       </tbody>						
                     </table>
@@ -464,14 +468,24 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
     };
 
     function yahoo_low_price_func(){     
-      $("#yahoo_low_price").val($("#yahoo_normal_price").val() * (1 + $("#yahoo_pro_price").val() / 100));
+      $("#yahoo_low_price").val(Math.round($("#yahoo_normal_price").val() * (1 + $("#yahoo_pro_price").val() / 100)));
     }
     function rakuten_low_price_func(){
-      $("#rakuten_low_price").val($("#rakuten_normal_price").val() * (1 + $("#rakuten_pro_price").val() / 100));
+      $("#rakuten_low_price").val(Math.round($("#rakuten_normal_price").val() * (1 + $("#rakuten_pro_price").val() / 100)));
     }
+    
     function common_low_price_func(){
-      $("#common_low_price").val($("#common_normal_price").val() * (1 + $("#common_pro_price").val() / 100));
+      console.log("common_low_price_func")
+      $("#common_low_price").val(Math.round($("#common_normal_price").val() * (1 + $("#common_pro_price").val() / 100)));
+      
+      $("#rakuten_normal_price").val($("#common_normal_price").val());
+      $("#rakuten_low_price").val(Math.round($("#rakuten_normal_price").val() * (1 + $("#rakuten_pro_price").val() / 100)));
+
+      $("#yahoo_normal_price").val($("#common_normal_price").val());
+      $("#yahoo_low_price").val(Math.round($("#yahoo_normal_price").val() * (1 + $("#yahoo_pro_price").val() / 100)));
     }
+
+
     function item_save(){
       var ec_kind = "rakuten";
       if($("#ec_kind_1").prop('checked') == false){ 
@@ -552,16 +566,6 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 
     function common_save(){
       
-      let addr =  "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?format=json&keyword=" + $("#item_name").val() + "&genreId=555086&applicationId=1006686799015924310";
-      $.ajax({
-        url: addr,
-        type: "get",
-        data:{},
-        success: function(result) {
-          console.log(result);
-        }
-      });
-
       if(window.confirm("共通項目を保存しますか？")){
 
         if($("#master_code").val() == ""){
@@ -591,23 +595,29 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
             group_set : $("#group_set").val(),
             memo : $("#memo").val(),
 
+            common_now_price : $("#common_now_price").val(),
             common_low_price : $("#common_low_price").val(),
             common_pro_price : $("#common_pro_price").val(),
             common_normal_price : $("#common_normal_price").val(),
             common_high_price : $("#common_high_price").val(),
             common_deli_price : $("#common_deli_price").val(),
+            c_set_num : $("#common_set_num").val(),
 
+            rakuten_now_price : $("#rakuten_now_price").val(),
             rakuten_low_price : $("#rakuten_low_price").val(),
             rakuten_pro_price : $("#rakuten_pro_price").val(),
             rakuten_normal_price : $("#rakuten_normal_price").val(),
             rakuten_high_price : $("#rakuten_high_price").val(),
             rakuten_deli_price : $("#rakuten_deli_price").val(),
+            r_set_num : $("#rakuten_set_num").val(),
 
+            yahoo_now_price : $("#yahoo_now_price").val(),
             yahoo_low_price : $("#yahoo_low_price").val(),
             yahoo_pro_price : $("#yahoo_pro_price").val(),
             yahoo_normal_price : $("#yahoo_normal_price").val(),
             yahoo_high_price : $("#yahoo_high_price").val(),
             yahoo_deli_price : $("#yahoo_deli_price").val(),
+            y_set_num : $("#yahoo_set_num").val(),
           },
           success: function (response) {   
             alert("保存されました。");
@@ -656,6 +666,6 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
         $("#tracking_shop_div").html('※カンマ区切りで複数登録可<br>※「https://www.rakuten.co.jp/●●●/」の●●●の部分を入れてください。');
         $("#survey_url_div").html('※カンマ区切りで複数登録可<br>※「https://www.rakuten.co.jp/●●●/」の●●●の部分を入れてください。');
       }
-    })
+    });
   </script>
 @endsection

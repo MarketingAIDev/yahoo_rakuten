@@ -2,16 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Applicant;
-use App\Models\Recruitment;
-use App\Models\RecruitmentFavourite;
-use App\Models\AmazonAddList;
-use App\Models\AmazonList;
-use App\Models\User;
-use App\Models\Benefit;
-use App\Models\Profit;
-use App\Models\Deliver;
-use App\Models\Category;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Item;
 use App\Models\PriceRevision;
 use App\Models\TimePattern;
@@ -19,27 +10,21 @@ use App\Models\UserProductPattern;
 use App\Models\CustomPricePattern;
 use App\Models\CustomTimePattern;
 use App\Models\DefaultPricePattern;
-use Revolution\Amazon\ProductAdvertising\Facades\AmazonProduct;
+use App\Models\Competition;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class MypageController extends Controller
 {  
 	public $amazon_category_array = array();
 
-	public function index()
-	{        
+	public function index() {
 		$user = Auth::user();
 		return view('mypage.dashboard', ['user' => $user]);
-		
 	}
 
-	public function itemSave(Request $request)
-	{
+	public function itemSave(Request $request) {
 		$res = $request->all();
 
 		$res["user_id"] = Auth::user()->id;
@@ -58,7 +43,7 @@ class MypageController extends Controller
 		}
 
 		if(count($common_id) > 0){			
-			$sel = $res["sel"];			
+			$sel = $res["sel"];
 			Item::where("id", $sel)->update($row);
 			$sel = Item::where("id", $sel)->get();
 			echo json_encode($sel);
@@ -69,8 +54,7 @@ class MypageController extends Controller
 		}
 	}
 
-	public function priceSave(Request $request)
-	{
+	public function priceSave(Request $request) {
 		$res = $request->all();
 
 		$res["user_id"] = Auth::user()->id;
@@ -160,8 +144,7 @@ class MypageController extends Controller
 		return $shinai;
 	}
 
-	public function commonSave(Request $request)
-	{
+	public function commonSave(Request $request) {
 		$res = $request->all();
 		$res["user_id"] = Auth::user()->id;
 		
@@ -178,24 +161,29 @@ class MypageController extends Controller
 			$sel = Item::where("id", $sel["id"])->get();
 			echo json_encode($sel);
 		}
+		
 	}
 
-	public function itemAdd()
-	{
+	public function itemAdd() {
 		$user = Auth::user();
-		return view('mypage.item_add', ['user' => $user]);		
+		return view('mypage.item_add', ['user' => $user]);
 	}
 	
-	public function itemConfirm()
-	{
+	public function itemConfirm() {
 		$user = Auth::user();
 		$user->selected_pattern;
 		$user->custom_price_pattern;
 		$user->custom_time_pattern;
-		$items = Item::where('user_id', Auth::user()->id)->paginate(10);
+		$items = Item::where('user_id', $user->id)->paginate(10);
+
+		foreach ($items as $item) {
+			$item->r_time_pattern;
+			$item->y_time_pattern;
+		}
+
 		$timepatterns = TimePattern::all();
 		$patterns = PriceRevision::all();
-		// return $user;
+		// var_export($items);
 		return view('mypage.item_list', ['user' => $user, 'items' => $items, 'patterns' => $patterns, 'timepatterns' => $timepatterns]);
 	}
 
@@ -313,8 +301,7 @@ class MypageController extends Controller
 		}
 		// if (isset($req['time_pattern'])) {
 		// 	$pattern = TimePattern::find($req['id']);
-		// }
-		
+		// }	
 	}
 
 	public function itemEdit($id) {
@@ -400,5 +387,127 @@ class MypageController extends Controller
 		$pattern->user_id = $user->id;
 
 		$pattern->save();
+	}
+	
+	public function sendMsg(Request $request){
+
+		$res = $request->all(); 
+		
+		$item = Item::find($res['product']);
+
+        // $user = User::where('id', Auth::user()->id)->get();
+        $user = Auth::user();
+        $user = $user[0];
+		
+		$detail = [];
+		$bccAry = [];
+	
+		$msg = '<!DOCTYPE html><html>';
+
+		if($res["msg_code"] == 1){			
+			$msg .= '<head>
+				<title>商品価格が上限価格に到達しました。</title>
+			</head>';
+		}else if($res["msg_code"] == 1){
+			$msg .= '<head>
+				<title>商品価格が下限価格に到達しました。</title>
+			</head>';
+		}else{
+			$msg .= '<head>
+				<title>商品価格が10％下落しました。</title>
+			</head>';
+		}
+		$msg .= '<body>    
+			
+			<br>
+			'.$user["family_name"].'　様<br>    
+			<br>
+			<br>
+			お世話になっております。<br>
+			らくらくECくん事務局の栗田と申します。<br>
+			<br>';
+		
+		if($res["shop_kind"] == 1){
+			$msg .= 'Rakutenの商品名：'.$item["item_name"].'</br>
+			RakutenのJANコード：'.$item["item_name"].'<br>';
+
+			$msg.= 'Rakutenの出品価格 : '.$item["rakuten_low_price"].'<br>';
+			$msg.= 'Rakutenの実質最安値 : '.$item["r_real_low_price"].'<br>';
+		}else{
+			$msg .= 'Yahooの商品名：'.$item["item_name"].'</br>
+			YahooのJANコード：'.$item["item_name"].'<br>';
+
+			$msg.= 'Yahooの出品価格 : '.$item["yahoo_low_price"].'<br>';
+			$msg.= 'Yahooの実質最安値 : '.$item["y_real_low_price"].'<br>';
+		}
+
+		if($res["msg_code"] == 1){
+			$msg .= '商品価格が上限価格に到達しました。<br>';
+		}else if($res["msg_code"] == 1){
+			$msg .= '商品価格が下限価格に到達しました。<br>';
+		}else{
+			$msg .= '商品価格が10％下落しました。<br>';
+		}
+		$msg .= '
+			<br>
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+			らくらくECくん<br>
+			http://xs626768.xsrv.jp/<br>
+			<br>
+			＜会社＞<br>
+			株式会社Happiness Trade<br>
+			福岡県筑後市野町518-1<br>
+			<br>
+			━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+			
+		
+		</body>
+		</html>';
+					
+		$details["name"] = $user["family_name"];
+		$details["email"] = $user["email"];
+		$details["msg"] = $msg;
+
+		$details = $user;
+		Mail::to($details["email"])
+				->bcc($bccAry)         
+				->send(new \App\Mail\PublicMail($details));
+
+	}
+
+	public function shopList(Request $request) {
+		$user = Auth::user();
+
+		$shops = Item::where('user_id', Auth::user()->id)->find($request['product']);
+		$kind = $request['kind'];
+		
+		if ($kind == '1') {
+			$lists = json_decode($shops['r_shop_list'], true);
+		} else if ($kind == '2') {
+			$lists = json_decode($shops['y_shop_list'], true);
+		} else {
+		}
+		
+		// var_export($lists[0]);
+		return view('mypage.shop_list', ['user' => $user, 'lists' => $lists, 'kind' => $kind]);
+	}
+
+	public function account_setting() {
+		$user = Auth::user();
+
+		return view('mypage.account_setting', ['user' => $user]);
+	}
+
+	public function shop_register(Request $request) {
+		$user = Auth::user();
+		$list = $user->competition_list;
+		if (!isset($list)) {
+			$list = new Competition;
+			$list['user_id'] = $user->id;
+		}
+		$list['rakuten_list'] = $request['rakuten-account'];
+		$list['yahoo_list'] = $request['yahoo-account'];
+		$list->save();
+		return view('mypage.account_setting', ['user' => $user]);
 	}
 }

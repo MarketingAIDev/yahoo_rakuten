@@ -25,7 +25,7 @@ td, th {
         <div class="card-body">
           <div class="tab-content" id="custom-tabs-four-tabContent">
             <div class="tab-pane fade show active" id="price" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab" style="overflow: auto; max-height: 600px;">
-              <table class="table table-bordered table-hover table-striped" id="patternTable">
+              <table class="table table-bordered table-hover" id="patternTable">
                 <thead style="position: sticky; top: -1px; background: white; z-index: 2;">
                   <tr>
                     <th style="display: none;">id</th>
@@ -108,7 +108,7 @@ td, th {
             </div>
 
             <div class="tab-pane fade show" id="time" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab" style="overflow: auto; max-height: 600px;">
-              <table class="table table-bordered table-hover table-striped" id="time-pattern-table">
+              <table class="table table-bordered table-hover" id="time-pattern-table">
                 <thead style="position: sticky; top: -1px; background: white; z-index: 2;">
                   <tr>
                     <th rowspan="1" colspan="1" style="display: none;">id</th>
@@ -155,60 +155,60 @@ td, th {
                       <input type="color" name='time-color' value="{{$pattern['color']}}" />
                     </td>
 
-                    <td>
-                      <input type="checkbox" name="time-mon" @if ($pattern['mon']) checked @endif />
+                    <td style="border-right: 1px solid transparent;">
+                      <input type="checkbox" name="time-mon" @if ($pattern['mon']) checked @endif onclick="sync(event)" />
                       <label for="time-mon">月</label>
                     </td>
 
-                    <td>
-                      <input type="checkbox" name="time-tue" @if ($pattern['tue']) checked @endif />
+                    <td style="border-right: 1px solid transparent;">
+                      <input type="checkbox" name="time-tue" @if ($pattern['tue']) checked @endif onclick="sync(event)"/>
                       <label for="time-tue">火</label>
                     </td>
 
-                    <td>
-                      <input type="checkbox" name="time-wed" @if ($pattern['wed']) checked @endif />
+                    <td style="border-right: 1px solid transparent;">
+                      <input type="checkbox" name="time-wed" @if ($pattern['wed']) checked @endif onclick="sync(event)" />
                       <label for="time-wed">水</label>
                     </td>
                     
-                    <td>
-                      <input type="checkbox" name="time-thu" @if ($pattern['thu']) checked @endif />
+                    <td style="border-right: 1px solid transparent;">
+                      <input type="checkbox" name="time-thu" @if ($pattern['thu']) checked @endif onclick="sync(event)" />
                       <label for="time-thu">木</label>
-                    </td>
+                    </td style="border: 1px solid transparent;">
                     
-                    <td>
-                      <input type="checkbox" name="time-fri" @if ($pattern['fri']) checked @endif />
+                    <td style="border-right: 1px solid transparent;">
+                      <input type="checkbox" name="time-fri" @if ($pattern['fri']) checked @endif onclick="sync(event)" />
                       <label for="time-fri">金</label>
                     </td>
                     
-                    <td>
-                      <input type="checkbox" name="time-sat" @if ($pattern['sat']) checked @endif />
+                    <td style="border-right: 1px solid transparent;">
+                      <input type="checkbox" name="time-sat" @if ($pattern['sat']) checked @endif onclick="sync(event)" />
                       <label for="time-sat">土</label>
                     </td>
                     
                     <td>
-                      <input type="checkbox" name="time-sun" @if ($pattern['sun']) checked @endif />
+                      <input type="checkbox" name="time-sun" @if ($pattern['sun']) checked @endif onclick="sync(event)" />
                       <label for="time-sun">日</label>
                     </td>
 
                     <td>
                       <div>
                         <label for="appt">開始:</label>
-                        <input type="time" name="time-open" value="{{$pattern['open_time']}}" />
+                        <input type="time" name="time-open" value="{{$pattern['open_time']}}" onchange="sync(event)" />
                       </div>
                       <div>
                         <label for="appt">終了:</label>
-                        <input type="time" name="time-close" value="{{$pattern['close_time']}}" />
+                        <input type="time" name="time-close" value="{{$pattern['close_time']}}" onchange="sync(event)" />
                       </div>
                     </td>
 
                     <td>
                       <div>
                         <label for="appt">開始:</label>
-                        <input type="datetime-local" name="time-dateopen" value="{{$pattern['open_datetime']}}" />
+                        <input type="datetime-local" name="time-dateopen" value="{{$pattern['open_datetime']}}" onchange="sync(event)" />
                       </div>
                       <div>
                         <label for="appt">終了:</label>
-                        <input type="datetime-local" name="time-dateclose" value="{{$pattern['close_datetime']}}" />
+                        <input type="datetime-local" name="time-dateclose" value="{{$pattern['close_datetime']}}" onchange="sync(event)" />
                       </div>
                     </td>
 
@@ -489,6 +489,17 @@ td, th {
       }
     };
 
+    const sync = (e) => {
+      // if (e.target.type == 'checkbox' || e.target.type == 'time') {
+      //   if ($(e.target).parents('tr')[0].querySelector('input[name^="time-"]:checked')) {
+      //     $(e.target).parents('td').siblings()[13].querySelector('input[type="datetime-local"]').disabled = true;
+      //   }
+      // } else if (e.target.type == 'date-timeheckbox') {
+      //   $(e.target).parents('td').siblings()[13].querySelector('input[type="datetime-local"]').disabled = false;
+      //   $(e.target).parents('td').siblings()[12].children.style.disabled = true;
+      //   $(e.target).parents('td').siblings()[13].children.style.disabled = true;
+      // }
+    }
   </script>
   
 @endsection

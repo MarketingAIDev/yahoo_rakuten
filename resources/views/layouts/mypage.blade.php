@@ -144,44 +144,9 @@
                   <a href="{{ asset('/mypage/item_add') }}" class="nav-link">
                     <p>商品追加</p>
                   </a>
-                </li>   
+                </li>
               </ul>
             </li>
-            <!-- <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-book"></i>
-                <p>
-                  注文管理
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    
-                    <p>統計情報</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    
-                    <p>利益管理表</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    
-                    <p>注文情報</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    
-                    <p>注文情報(簡易版)</p>
-                  </a>
-                </li>
-              </ul>
-            </li> -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-edit"></i>
@@ -191,6 +156,11 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ asset('/mypage/account_setting') }}" class="nav-link">
+                    <p>アカウント管理</p>
+                  </a>
+                </li>
                 <li class="nav-item">
                   <a href="{{ asset('/mypage/external_setting') }}" class="nav-link">
                     <p>外部連携設定</p>

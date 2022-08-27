@@ -75,4 +75,11 @@ class User extends Authenticatable
             'user_id'
         );
     }
+
+    public function competition_list() {
+        return $this->hasOne(
+            Competition::class,
+            'user_id'
+        );
+    }
 }

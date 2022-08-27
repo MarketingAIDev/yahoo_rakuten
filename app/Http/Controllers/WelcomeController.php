@@ -10,10 +10,6 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        // //return view('auth.login');
-        // echo "FFFF";
-        // // $farms = [];       
-        // return view("landing");
         if(!empty(Auth::user())){
             return redirect("mypage");
         }else{            

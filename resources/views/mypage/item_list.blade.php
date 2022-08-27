@@ -12,16 +12,16 @@
 	#rakuten-table th,
 	#yahoo-table td,
 	#yahoo-table th {
-		font-size: 10px !important;
+		font-size: 10px;
 	}
 
-	#rakuten-table thead tr th:first-child,
+	/* #rakuten-table thead tr th:first-child,
 	#rakuten-table tbody tr td:first-child,
 	#yahoo-table thead tr th:first-child,
 	#yahoo-table tbody tr td:first-child  {
 		position: sticky;
 		left: 0px;
-	}
+	} */
 
 	/* #rakuten-table thead tr th:nth-child(2),
 	#rakuten-table tbody tr td:nth-child(2),
@@ -64,14 +64,16 @@
 		background: white;
 	}
 
-	.btn-revision {
-		width: 70px;
+	.btn-revision {		
 		background: #eee;
 		color: black;
 		font-size: 10px;
 		border: 1px solid gray;
 		border-radius: 2px !important;
 		margin-top: 2px !important;
+		padding: 0.1rem;
+		width: 55px;
+		height: 20px;
 	}				
 </style>
 <?php
@@ -92,19 +94,23 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 						<li class="nav-item">
 							<a class="nav-link" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile-tab" aria-selected="false">ヤフショ</a>
 						</li>
-					</ul>			
+						<div style="top: 3px; right: 13px !important; position: absolute;">
+							{{ $items->links('mypage.pagination') }}
+						</div>
+					</ul>	
+							
 				</div>
 				<!-- /.card-header -->
 				<div class="card-body">
 					<div class="tab-content" id="custom-tabs-four-tabContent">
 						<div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
 							<div class="row">										
-								<div style="overflow: auto;">
+								<div style="max-height:6000px!important">
 									<table class="table table-bordered" id="rakuten-table">
 										<thead>
 											<tr>
 												<th rowspan="3" colspan="1" style="width: 30px; z-index: 5; background: white;">#</th>
-												<th rowspan="3" colspan="1" style="width: 150px; z-index: 5; background: white;">商品画像<br>(⾃社トップ画像)</th>
+												<th rowspan="3" colspan="1" style="width: 100px; z-index: 5; background: white;">商品画像<br>(⾃社トップ画像)</th>
 												<th rowspan="3" colspan="1" style="width: 100px; z-index: 5; background: white;">商品名<br>商品管理番号</th>
 												<th rowspan="1" colspan="4">価格改定設定（楽天/選択式）</th>
 												<th rowspan="1" colspan="2">楽天価格<br>調整</th>
@@ -143,24 +149,14 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 													</a>
 												</td>
 												<td rowspan="2">
-													<img src="{{$item['r_img_url']}}" style="width: 128px; height: 128px;" />
+													<img src="{{$item['r_img_url']}}" style="width: 90px; height: 90px;" />
 												</td>
 												<td rowspan="2">
 													<a style="color:#007bff; text-decoration: underline;" data-toggle="tooltip" title="{{$item['memo']}}" href="{{url('/mypage/item/edit/'.$item['id'])}}">{{$item["item_name"]}}</a><br>
 													{{$item["jan_code"]}}
 													<textarea class="form-control" style="font-size: 10px;" disabled>{{$item['memo']}}</textarea>
 												</td>
-												<td rowspan="2"></td>
-												<!-- @if($item["r_search_kind"] == 1)
-												<td rowspan="2" style="background-color:rgb(238, 130, 238); color:#FFF">
-													JAN
-												</td>
-												@else
-												<td rowspan="2" style="background-color:#495057; color:#FFF">
-													キーワード
-												</td>
-												@endif -->
-
+												<td rowspan="2">{{$item['r_set_num']}}</td>
 												@if ($item['r_search_condition'] == '9999')
 													<td rowspan="2" style="background: #eee">
 														カスタム
@@ -168,7 +164,7 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 												@else
 													@foreach ($patterns as $pattern)
 														@if ($item['r_search_condition'] == $pattern['id'])
-															<td rowspan="2" style="background: {{$pattern['color']}}">
+															<td rowspan="2" style="background: {{$pattern['color']}};">
 																{{$pattern['name']}}
 															</td>
 														@endif
@@ -193,8 +189,16 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-pid="9999" data-toggle="modal" data-target="#customModal" style="background: #eee; border: 1px solid gray; font-size: 9px;" onclick="selectPattern(event)">カスタム</button>
 													@endif
 												</td>
-												<td rowspan="2"></td>
-												<td rowspan="2">{{$item["rakuten_pro_price"]}}%</td>
+												<td rowspan="2">
+													@if (isset($item['r_time_pattern']['yen']))
+														{{$item['r_time_pattern']['yen']}}円
+													@endif
+												</td>
+												<td rowspan="2">
+													@if (isset($item['r_time_pattern']['pro']))
+														{{$item['r_time_pattern']['pro']}}%
+													@endif
+												</td>
 												<td rowspan="2" data-field="time-pattern" data-selected="">
 													<!-- customer setting button -->
 													@foreach ($timepatterns as $pattern)
@@ -210,37 +214,47 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 													@if ($item['r_time_condition'] == '9999')
 														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-tid="9999" data-toggle="modal" data-target="#timeModal" style="background: #eee; border: 1px solid black; font-weight: bold; font-size: 10px;" data-sale="{{$user['custom_time_pattern'][0]}}" data-clicked="1" onclick="selectPattern(event)">カスタム</button>
 													@else
-														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-tid="9999" data-toggle="modal" data-target="#timeModal" style="background: #eee; border: 1px solid gray; font-size: 9px;" data-sale="{{$user['custom_time_pattern'][0]}}" onclick="selectPattern(event)">カスタム</button>
+														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-tid="9999" data-toggle="modal" data-target="#timeModal" style="background: #eee; border: 1px solid gray; font-size: 9px;" onclick="selectPattern(event)">カスタム</button>
 													@endif
 												</td>
-												<td rowspan="2" style="background: #eee; color: black;"></td>
-												<td rowspan="2" style="background: #eee; color: black;"></td>
+												<td rowspan="2" style="background: #eee; color: black;">...</td>
+												<td rowspan="2" style="background: #eee; color: black;">
+													@if (isset($item['r_time_pattern']['yen']))
+														{{$item["rakuten_now_price"] + $item['r_time_pattern']['yen']}}円
+													@endif
+												</td>
 												<td rowspan="2" style="background: #eee; color: black;">{{$item["rakuten_normal_price"]}}円</td>
 												<td rowspan="2" style="background: #eee; color: black;">{{$item["rakuten_low_price"]}}円</td>
 												<td rowspan="2" style="background: #eee; color: black;">{{$item["rakuten_high_price"]}}円</td>
 												@if($item["r_manager_true"] == 1)
-												<td rowspan="2" style="background-color: #eee; color: black">
+												<td rowspan="2" style="background: #eee; color: black">
 													有
 												</td>
 												@else
-												<td rowspan="2" style="background-color: #eee; color: black">
+												<td rowspan="2" style="background: #eee; color: black">
 													●
 												</td>
 												@endif
 												<td rowspan="2" id="r_seller_<?=$item["id"]?>">
 												<?php
 													$r_shop = json_decode($item->r_shop_list, true);
-													// var_export($r_shop[0]);
+													// var_export(($item['r_shop_list']));
+													
 													if(is_array($r_shop)){
-														$cnt = min(count($r_shop), 5);
-														for($i = 0; $i < $cnt; $i++){									
-															echo "<div><a href='".$r_shop[$i]["Item"]["itemUrl"]."'>".$r_shop[$i]["Item"]["shopName"]."</a></div>";
+														$cnt = min(count($r_shop), 1);
+														for($i = 0; $i < $cnt; $i++){						
+															echo "<div><a href='/mypage/shop_list?product=".$item["id"]."&kind=1' target='_blank'>".$r_shop[$i]["shopName"]."</div>";
+															// echo "<div>「<a href='".$r_shop[$i]["itemUrl"]."'>".$r_shop[$i]["shopName"]."</a>」</div>";
 														}
 													}
 												?>
 												</td>													
-												<td rowspan="2" id="r_low_<?=$item["id"]?>">{{$item->r_real_low_price}}</td>
-												<td rowspan="2" id="r_diff_<?=$item["id"]?>"></td>
+												<td rowspan="2" id="r_low_<?=$item["id"]?>">{{$item->r_real_low_price}}円</td>
+												<td rowspan="2" id="r_diff_<?=$item["id"]?>">
+													@if (isset($item['r_time_pattern']['yen']))
+														{{$item["rakuten_now_price"] + $item['r_time_pattern']['yen'] - $item->r_real_low_price}}円
+													@endif
+												</td>
 											</tr>
 											<tr>
 												<td style="background: #fff; z-index: 0;">{{$item["r_out_keyword"]}}</td>
@@ -248,18 +262,18 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 											@endforeach
 										</tbody>
 									</table>
-								</div>
+								</div>								
 							</div>
 						</div>
 
 						<div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
 							<div class="row">										
-								<div style="overflow: auto;">
+								<div>
 									<table class="table table-bordered" id="yahoo-table">
 										<thead>
 											<tr>
 												<th rowspan="3" style="width: 30px; z-index: 5; background: white;">#</th>
-												<th rowspan="3" style="width: 150px; z-index: 5; background: white;">商品画像<br>(⾃社トップ画像)</th>
+												<th rowspan="3" style="width: 100px; z-index: 5; background: white;">商品画像<br>(⾃社トップ画像)</th>
 												<th rowspan="3" style="width: 100px; z-index: 5; background: white;">商品名<br>商品管理番号</th>
 												<th colspan="4">価格改定設定（ヤフショ/選択式）</th>
 												<th colspan="2">ヤフショ価格<br>調整</th>
@@ -298,26 +312,16 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 													</a>
 												</td>
 												<td rowspan="2">
-													<img src="{{$item['y_img_url']}}" style="width: 128px; height: 128px;" />
+													<img src="{{$item['y_img_url']}}" style="width: 90px; height: 90px;" />
 												</td>
 												<td rowspan="2">
-													<a style="color:#007bff; text-decoration: underline;"  data-toggle="tooltip" title="{{$item['memo']}}" href="{{url('/mypage/item/edit/'.$item['id'])}}">{{$item["master_code"]}}</a>
+													<a style="color:#007bff; text-decoration: underline;"  data-toggle="tooltip" title="{{$item['memo']}}" href="{{url('/mypage/item/edit/'.$item['id'])}}">{{$item["jan_code"]}}</a>
 													{{$item["name"]}}
 													<textarea class="form-control" style="font-size: 10px;" disabled>{{$item['memo']}}</textarea>
 												</td>
-												<td rowspan="2"></td>
-												<!-- @if($item["y_search_kind"] == 1)
-												<td rowspan="2" style="background-color:#ea4435; color:#FFF" data-field="search-mode">
-													Jan
-												</td>
-												@else
-												<td rowspan="2" style="background-color:#495057; color:#FFF" data-field="search-mode">
-													キーワード
-												</td>
-												@endif -->
-
+												<td rowspan="2">{{$item['y_set_num']}}</td>
 												@if ($item['y_search_condition'] == '9999')
-													<td rowspan="2" style="background: #eee">
+													<td rowspan="2" style="background: #eee;">
 														カスタム
 													</td>
 												@else
@@ -348,8 +352,16 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-pid="9999" data-toggle="modal" data-target="#customModal" style="background: #eee; border: 1px solid gray; font-size: 9px;" onclick="selectPattern(event)">カスタム</button>
 													@endif
 												</td>
-												<td rowspan="2"></td>
-												<td rowspan="2"></td>
+												<td rowspan="2">
+													@if (isset($item['y_time_pattern']['yen']))
+														{{$item['y_time_pattern']['yen']}}円
+													@endif
+												</td>
+												<td rowspan="2">
+													@if (isset($item['y_time_pattern']['pro']))
+														y_time_pattern{{$item['y_time_pattern']['pro']}}%
+													@endif
+												</td>
 												<td rowspan="2" data-field="time-pattern" data-selected="">
 													@foreach ($timepatterns as $pattern)
 														@if ($pattern['display'])
@@ -364,11 +376,15 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 													@if ($item['y_time_condition'] == '9999')
 														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-tid="9999" data-toggle="modal" data-target="#timeModal" style="background: #eee; border: 1px solid black; font-weight: bold; font-size: 10px;" data-sale="{{$user['custom_time_pattern'][0]}}" data-clicked="1" onclick="selectPattern(event)">カスタム</button>
 													@else
-														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-tid="9999" data-toggle="modal" data-target="#timeModal" style="background: #eee; border: 1px solid gray; font-size: 9px;" data-sale="{{$user['custom_time_pattern'][0]}}" onclick="selectPattern(event)">カスタム</button>
+														<button type="button" class="btn btn-xs btn-revision" data-bgcolor="#eee" data-tid="9999" data-toggle="modal" data-target="#timeModal" style="background: #eee; border: 1px solid gray; font-size: 9px;" onclick="selectPattern(event)">カスタム</button>
 													@endif
 												</td>
 												<td rowspan="2" style="background: #eee; color: black;"></td>
-												<td rowspan="2" style="background: #eee; color: black;"></td>
+												<td rowspan="2" style="background: #eee; color: black;">
+													@if (isset($item['y_time_pattern']['yen']))
+														{{$item["yahoo_now_price"] + $item['y_time_pattern']['yen']}}円
+													@endif
+												</td>
 												<td rowspan="2" style="background: #eee; color: black;">{{$item["yahoo_normal_price"]}}円</td>
 												<td rowspan="2" style="background: #eee; color: black;">{{$item["yahoo_low_price"]}}円</td>
 												<td rowspan="2" style="background: #eee; color: black;">{{$item["yahoo_high_price"]}}円</td>
@@ -386,15 +402,20 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 													$y_shop = json_decode($item->y_shop_list, true);
 													//var_export($y_shop[0]);
 													if(is_array($y_shop)){
-														$cnt = min(count($y_shop), 5);
-														for($i = 0; $i < $cnt; $i++){													
-															echo "<div><a href='".$y_shop[$i]["guid"]."'>".substr($y_shop[$i]["subStoreName"],0,6)."...</a></div>";
+														$cnt = min(count($y_shop), 1);
+														for($i = 0; $i < $cnt; $i++){
+															echo "<div><a href='/mypage/shop_list?product=".$item["id"]."&kind=2' target='_blank'>".$y_shop[$i]["shopName"]."</div>";
+															// echo "<div>「<a href='".$y_shop[$i]["guid"]."'>".substr($y_shop[$i]["shopName"],0,6)."...</a>」</div>";
 														}
 													}
 												?>
 												</td>													
-												<td rowspan="2" id="y_low_<?=$item["id"]?>">{{$item->y_real_low_price}}</td>
-												<td rowspan="2" id="y_diff_<?=$item["id"]?>"></td>
+												<td rowspan="2" id="y_low_<?=$item["id"]?>">{{$item->y_real_low_price}}円</td>
+												<td rowspan="2" id="y_diff_<?=$item["id"]?>">
+													@if (isset($item['y_time_pattern']['yen']))
+														{{$item["yahoo_now_price"] + $item['y_time_pattern']['yen'] - $item->y_real_low_price}}円
+													@endif
+												</td>
 											</tr>
 											<tr>
 												<td style="background: #fff; z-index: 0;">{{$item["y_out_keyword"]}}</td>
@@ -410,7 +431,9 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 				<!-- /.card-body -->
 				
 				<div class="card-footer">
+				
 					{{ $items->links('mypage.pagination') }}
+					
 					<button type="button" class="btn btn-info float-left" onclick="item_add()">商品追加</button>
 				</div>
 				<!-- /.card-footer -->
@@ -426,17 +449,25 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 
 	<script>
 		$(document).ready(function() {
+			
 			// format_pattern();
 			// $(".main-footer").css("display", "none");
 			// $(".main-header").css("display", "none");
 			
 
-			$("#rakuten-table")[0].parentElement.style.maxHeight = window.innerHeight - 250 + "px";
-			$("#yahoo-table")[0].parentElement.style.maxHeight = window.innerHeight - 250 + "px";
+			// $("#rakuten-table")[0].parentElement.style.maxHeight = window.innerHeight - 250 + "px";
+			// $("#yahoo-table")[0].parentElement.style.maxHeight = window.innerHeight - 250 + "px";
 			
 			$('[data-toggle="tooltip"]').tooltip();
 
-			$('[data-field="time-pattern"]').children('[data-clicked=1]').click();
+			for (let i = 0, len = $('[data-field="time-pattern"]').children('[data-clicked=1]').length; i < len; i++) {
+				if ($('[data-field="time-pattern"]').children('[data-clicked=1]')[i].innerHTML == "カスタム") {
+					continue;
+				}
+				$('[data-field="time-pattern"]').children('[data-clicked=1]')[i].click()
+			}
+			// $('[data-field="time-pattern"]').children('[data-clicked=1]').click();
+			setInterval(mail(), 60000);
 		});
 
 		var sPage = "1";
@@ -445,7 +476,6 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 		}
 
 		let num = 0;
-		
 		const selectPattern = (e) => {
 			let bgColor = e.target.dataset.bgcolor;
 			// changing appearance of the button which has been selected
@@ -508,7 +538,8 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 
 			e.target.parentElement.dataset.selected = e.target.dataset.sale;
 			let time_condition = JSON.parse(e.target.parentElement.dataset.selected);
-			
+			let _product_id = e.target.parentElement.parentElement.dataset.product;
+
 			// tracking time condition
 			const timeTracking = () => {
 				const d = new Date();
@@ -520,7 +551,54 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 				let currentTime = d.getHours() + ":" + d.getMinutes();
 				if (time_condition[day]) {
 					if (currentTime > openTime && currentTime < closeTime) {
-						alert("IT IS TIME!");
+						// alert("IT IS TIME!");
+						let trs = $('tr[data-product]');
+						let real, sale, diff;
+						for (let i = 0, len = trs.length; i < len; i++) {
+							real = trs[i].children[17].innerHTML.replace("円", "");
+							sale = trs[i].children[13].innerHTML.replace("円", "");
+							diff = Math.abs(real - sale);
+							if (diff < 100) {
+								trs[i].children[11].style.background = "lightred";
+							} else if (diff >= 100 && diff < 1000) {
+								trs[i].children[11].style.background = "lightgreen";
+							} else if (diff >= 1000) {
+								trs[i].children[11].style.background = "lightblue";
+							} else {
+							}
+						}
+						
+						//http://localhost:32768/api/v1/rakutens/change_info?sel=1&item=100
+						//http://localhost:32768/api/v1/yahoos/change_info?sel=1&item=100
+						
+						$.ajax({
+							url: "http://xs626768.xsrv.jp/fmproxy/api/v1/rakutens/change_info?sel=<?=Auth::user()->id?>&item=" + _product_id,
+							type: "get",
+							success: function(response) {
+								console.log(response);
+								let targetTr = $('tr[data-product=' + _product_id + ']')[0];
+								targetTr.children[17].innerHTML = response.r_real_low_price + "円";
+								targetTr.children[18].innerHTML = targetTr.children[13].innerHTML.replace("円", "") - response.r_real_low_price + "円";
+
+								let r_shop = JSON.parse(response.r_shop_list);
+								
+								targetTr.children[16].innerHTML = "<div><a href='/mypage/shop_list?product=" + _product_id + "&kind=1' target='_blank'>" + r_shop[0].shopName + "</div>";
+							}
+						});
+
+						$.ajax({
+							url: "http://xs626768.xsrv.jp/fmproxy/api/v1/yahoos/change_info?sel=<?=Auth::user()->id?>&item=" + _product_id,
+							type: "get",
+							success: function(response) {
+								console.log(response);
+								let targetTr = $('tr[data-product=' + _product_id + ']')[0];
+								targetTr.children[17].innerHTML = response.r_real_low_price + "円";
+								targetTr.children[18].innerHTML = targetTr.children[13].innerHTML.replace("円", "") - response.y_real_low_price + "円";
+
+								let y_shop = JSON.parse(response.y_shop_list);
+								targetTr.children[16].innerHTML = "<div><a href='/mypage/shop_list?product=" + _product_id + "&kind=2' target='_blank'>" + y_shop[0].shopName + "</div>";
+							}
+						});
 					} else {
 						
 					}
@@ -533,16 +611,77 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 				let currentDatetime = d;
 	
 				if (currentDatetime > openDatetime && currentDatetime < closeDatetime) {
-					alert("IT IS TIME");
+					// alert("IT IS TIME");
+					let trs = $('tr[data-product]');
+					let real, sale, diff;
+					for (let i = 0, len = trs.length; i < len; i++) {
+						real = trs[i].children[17].innerHTML.replace("円", "");
+						sale = trs[i].children[13].innerHTML.replace("円", "");
+						diff = Math.abs(real - sale);
+						if (diff < 100) {
+							trs[i].children[11].style.background = "lightred";
+						} else if (diff >= 100 && diff < 1000) {
+							trs[i].children[11].style.background = "lightgreen";
+						} else if (diff >= 1000) {
+							trs[i].children[11].style.background = "lightblue";
+						} else {
+						}
+					}
+
+					$.ajax({
+						url: "http://xs626768.xsrv.jp/fmproxy/api/v1/rakutens/change_info?sel=<?=Auth::user()->id?>&item=" + _product_id,
+						type: "get",
+						success: function(response) {
+							console.log(response);
+							let targetTr = $('tr[data-product=' + _product_id + ']')[0];
+							targetTr.children[17].innerHTML = response.r_real_low_price + "円";
+							targetTr.children[18].innerHTML = targetTr.children[13].innerHTML.replace("円", "") - response.r_real_low_price + "円";
+
+							let r_shop = JSON.parse(response.r_shop_list);
+							targetTr.children[16].innerHTML = "<div><a href='/mypage/shop_list?product=" + _product_id + "&kind=1' target='_blank'>" + r_shop[0].shopName + "</div>";
+						}
+					});
+
+					$.ajax({
+						url: "http://xs626768.xsrv.jp/fmproxy/api/v1/yahoos/change_info?sel=<?=Auth::user()->id?>&item=" + _product_id,
+						type: "get",
+						success: function(response) {
+							console.log(response);
+							let targetTr = $('tr[data-product=' + _product_id + ']')[0];
+							targetTr.children[17].innerHTML = response.r_real_low_price + "円";
+							targetTr.children[18].innerHTML = targetTr.children[13].innerHTML.replace("円", "") - response.y_real_low_price + "円";
+
+							let y_shop = JSON.parse(response.y_shop_list);
+							targetTr.children[16].innerHTML = "<div><a href='/mypage/shop_list?product=" + _product_id + "&kind=2' target='_blank'>" + y_shop[0].shopName + "</div>";
+						}
+					});
 				} else {
 					
 				}
 			};
 
-			setInterval(timeTracking, 5000);
+			setInterval(timeTracking, 60000);
 
+			// time sale condition change
+			let saleInfo = JSON.parse(e.target.dataset.sale);
+			let yen = saleInfo.yen;
+			let pro = saleInfo.pro;
+
+			let siblings = $(e.target.parentElement).siblings();
+			siblings[7].innerHTML = yen + '円';
+			siblings[8].innerHTML = pro + '%';
+			let cost = siblings[13].innerHTML.replace('円', '');
+			if (yen != 0) {
+				siblings[10].innerHTML = yen * 1 + cost * 1 + '円';
+			} else if (pro != 0) {
+				siblings[10].innerHTML = cost / 100 * (100 + pro) + '円';
+			} else {
+
+			}
+
+			let price = siblings[16].innerHTML.replace('円', '');
+			siblings[17].innerHTML = siblings[10].innerHTML.replace('円', '') - price + '円';
 		};
-
 
 		const getPattern = (e) => {
 			let _id = $(e.target).data('id');
@@ -645,5 +784,65 @@ $secret = "jOr0rr7kmvXR9r5T6ERkXfN7KpGTu4vmd8TC8Ahv";
 				},
 			});
 		};
+
+		const mail = () => {
+			for (let i = 0, len = $('tr[data-product]').length; i < len; i++) {
+				let current = $('tr[data-product]')[i].children[12].innerHTML.replace('円', '') * 10 / 10;
+				let upper = $('tr[data-product]')[i].children[14].innerHTML.replace('円', '') * 10 / 10;
+				let lower = $('tr[data-product]')[i].children[13].innerHTML.replace('円', '') * 10 / 10;
+				let lowest = $('tr[data-product]')[i].children[17].innerHTML.replace('円', '') * 10 / 10;
+				let _id = $('tr[data-product]')[i].dataset.product;
+				let kind;
+
+				if (i < 10) {
+					kind = 'rakuten';
+				} else {
+					kind = 'yahoo';
+				}
+
+				if (current > upper) {
+					$.ajax({
+						url: './send_msg',
+						type: 'get',
+						data: {
+							product: _id,
+							shop_kind: kind,
+							msg_code: 1,
+						},
+						success: function(response) {
+							console.log(response);
+						}
+					});
+				} else if (current < lower) {
+					$.ajax({
+						url: './send_msg',
+						type: 'get',
+						data: {
+							product: _id,
+							shop_kind: kind,
+							msg_code: 2,
+						},
+						success: function(response) {
+							console.log(response);
+						}
+					});
+				}
+
+				if (lowest < current * 0.9) {
+					$.ajax({
+						url: './send_msg',
+						type: 'get',
+						data: {
+							product: _id,
+							shop_kind: kind,
+							msg_code: 3,
+						},
+						success: function(response) {
+							console.log(response);
+						}
+					});
+				}
+			}
+		}
 	</script>
 @endsection

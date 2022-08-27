@@ -31,8 +31,8 @@ class PublicMail extends Mailable
     public function build()
     {
         $bccAry = [];
-        return $this->subject('【もぐりこ】審査結果のご報告☆保存版☆ ID/パスワードのご連絡')
-                    ->from($address = 'info-support@mogrico.com', $name = 'info-support')      
+        return $this->subject('らくらくECくんのご連絡')
+                    ->from($address = 'moon@xs626768.xsrv.jp', $name = 'moon')      
                     ->bcc($bccAry)                         
                     ->view('emails.myPublicMail');
     }
